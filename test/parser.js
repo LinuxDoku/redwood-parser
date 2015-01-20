@@ -35,6 +35,12 @@ describe('redwood-parser', function() {
 			assert.deepEqual([
 				['foo bar'], 'or', ['joe doe']
 			], parser.parse('"foo bar" or "joe doe"'))
-		})
+		});
+
+        it('should return two words connected with and', function() {
+            assert.deepEqual([
+                ['foo'], 'and', ['bar'] 
+            ], parser.parse('"foo" and "bar"'));
+        });
 	});
 });

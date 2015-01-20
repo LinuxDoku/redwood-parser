@@ -15,7 +15,7 @@ module.exports = {
 		}
 
 		var words = [],
-			word = '';
+            word = '';
 
 		var inQuotes = false,
 			inSub = false;
@@ -36,6 +36,13 @@ module.exports = {
 					i++;
 					continue;
 				}
+
+                if(character === 'a' && expression[i + 1] === 'n' && expression[i + 2] === 'd') {
+                    words = [words, 'and'];
+                    inSub = true;
+                    i += 2;
+                    continue;
+                }
 			}
 
 			if(character === '"') {
