@@ -1,0 +1,4 @@
+{
+	"name": "redwood-parser",
+	"main": "src/parser.js"
+}
