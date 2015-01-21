@@ -9,7 +9,7 @@ module.exports = {
         }
 
         var pushWord = function(words, word) {
-            if(word instanceof reserved) {
+            if (word instanceof reserved) {
                 wrapUntilLastConjunction(words);
                 words.push(word);
                 return;
@@ -19,7 +19,7 @@ module.exports = {
                 if (words.length > 0) {
                     var prevWord = words[words.length - 1];
 
-                    if(prevWord instanceof Array) {
+                    if (prevWord instanceof Array) {
                         prevWord.push(word);
                         return;
                     } else if(prevWord instanceof reserved) {
@@ -36,15 +36,15 @@ module.exports = {
             var wrappedWords = [],
                 i = words.length - 1;
 
-            for(i; i >= 0; i--) {
-                if(words[i] instanceof Array || words[i] instanceof reserved) {
+            for (i; i >= 0; i--) {
+                if (words[i] instanceof Array || words[i] instanceof reserved) {
                     break;
                 }
 
                 wrappedWords.push(words[i]);
             }
 
-            if(wrappedWords.length !== 0) {
+            if (wrappedWords.length !== 0) {
                 var beforeWrappedWords = words.slice(i, i + words.length);
                 words.length = 0;
                 words.push.apply(this, beforeWrappedWords);
@@ -53,10 +53,10 @@ module.exports = {
         }
 
         var normalize = function(words) {
-            for(var i = 0; i < words.length; i++) {
+            for (var i = 0; i < words.length; i++) {
                 if(words[i] instanceof Array) {
                     words[i] = normalize(words[i]);
-                } else if(words[i] instanceof reserved) {
+                } else if (words[i] instanceof reserved) {
                     words[i] = words[i].toString();
                 }
             }
