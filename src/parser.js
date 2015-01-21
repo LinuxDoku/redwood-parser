@@ -10,7 +10,7 @@ module.exports = {
 
         var pushWord = function(words, word) {
             if(word instanceof reserved) {
-                warpUntilLastConjunction(words);
+                wrapUntilLastConjunction(words);
                 words.push(word);
                 return;
             }
@@ -32,7 +32,7 @@ module.exports = {
             }
         }
 
-        var warpUntilLastConjunction = function(words) {
+        var wrapUntilLastConjunction = function(words) {
             var wrappedWords = [],
                 i = words.length - 1;
 
