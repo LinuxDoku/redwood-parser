@@ -45,7 +45,7 @@ describe('redwood-parser', function() {
 
         it('should work with nested and connections', function() {
             assert.deepEqual([
-                [['foo'], 'and', ['foo']], 'and', ['bar']
+                ['foo'], 'and', ['foo'], 'and', ['bar']
             ], parser.parse('"foo" and "foo" and "bar"'))
         });
     });

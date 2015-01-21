@@ -14,6 +14,26 @@ module.exports = {
             }
         }
 
+        var warpUntilLastConjunction = function(words) {
+            var wrappedWords = [],
+                i = words.length - 1;
+
+            for(i; i >= 0; i--) {
+                if(words[i] instanceof Array || words[i] === 'or' || words[i] === 'and') {
+                    break;
+                }
+
+                wrappedWords.push(words[i]);
+            }
+
+            if(wrappedWords.length !== 0) {
+                words = words.slice(i, i + words.length);
+                words.push(wrappedWords);
+            }
+
+            return words;
+        }
+
         var words = [],
             word = '';
 
@@ -31,14 +51,16 @@ module.exports = {
                 }
 
                 if (character === 'o' && expression[i + 1] === 'r') {
-                    words = [words, 'or'];
+                    words = warpUntilLastConjunction(words);
+                    words.push('or');
                     inSub = true;
                     i++;
                     continue;
                 }
 
                 if (character === 'a' && expression[i + 1] === 'n' && expression[i + 2] === 'd') {
-                    words = [words, 'and'];
+                    words = warpUntilLastConjunction(words);
+                    words.push('and');
                     inSub = true;
                     i += 2;
                     continue;
