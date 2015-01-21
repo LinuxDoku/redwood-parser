@@ -1,5 +1,13 @@
 module.exports = {
     parse: function(expression) {
+        var reserved = function(str) {
+            this.str = str;
+
+            this.toString = function() {
+                return this.str;
+            }
+        }
+
         var pushWord = function(words, word, inSub) {
             if (word !== '') {
                 if (inSub) {
@@ -19,7 +27,7 @@ module.exports = {
                 i = words.length - 1;
 
             for(i; i >= 0; i--) {
-                if(words[i] instanceof Array || words[i] === 'or' || words[i] === 'and') {
+                if(words[i] instanceof Array || words[i] instanceof reserved) {
                     break;
                 }
 
@@ -29,6 +37,18 @@ module.exports = {
             if(wrappedWords.length !== 0) {
                 words = words.slice(i, i + words.length);
                 words.push(wrappedWords);
+            }
+
+            return words;
+        }
+
+        var normalize = function(words) {
+            for(var i = 0; i < words.length; i++) {
+                if(words[i] instanceof Array) {
+                    words[i] = normalize(words[i]);
+                } else if(words[i] instanceof reserved) {
+                    words[i] = words[i].toString();
+                }
             }
 
             return words;
@@ -52,7 +72,7 @@ module.exports = {
 
                 if (character === 'o' && expression[i + 1] === 'r') {
                     words = warpUntilLastConjunction(words);
-                    words.push('or');
+                    words.push(new reserved('or'));
                     inSub = true;
                     i++;
                     continue;
@@ -60,7 +80,7 @@ module.exports = {
 
                 if (character === 'a' && expression[i + 1] === 'n' && expression[i + 2] === 'd') {
                     words = warpUntilLastConjunction(words);
-                    words.push('and');
+                    words.push(new reserved('and'));
                     inSub = true;
                     i += 2;
                     continue;
@@ -75,8 +95,8 @@ module.exports = {
             word = word + character;
         }
 
-        pushWord(words, word, inSub);
+        pushWord(words, word, inSub);        
 
-        return words;
+        return normalize(words);
     }
 };

@@ -48,5 +48,11 @@ describe('redwood-parser', function() {
                 ['foo'], 'and', ['foo'], 'and', ['bar']
             ], parser.parse('"foo" and "foo" and "bar"'))
         });
+
+        it('should ignore conjuction in quoted strings', function() {
+            assert.deepEqual([
+                ['and'], 'or', ['or']
+            ], parser.parse('"and" or "or"'))
+        })
     });
 });
