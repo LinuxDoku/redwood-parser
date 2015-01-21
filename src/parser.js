@@ -8,17 +8,21 @@ module.exports = {
             }
         }
 
-        var pushWord = function(words, word, inSub) {
+        var pushWord = function(words, word) {
             if (word !== '') {
-                if (inSub) {
-                    if (words[words.length - 1] instanceof Array) {
-                        words[words.length - 1].push(word);
-                    } else {
+                if (words.length > 0) {
+                    var prevWord = words[words.length - 1];
+
+                    if(prevWord instanceof Array) {
+                        prevWord.push(word);
+                        return;
+                    } else if(prevWord instanceof reserved) {
                         words.push([word]);
+                        return;
                     }
-                } else {
-                    words.push(word);
                 }
+                
+                words.push(word);
             }
         }
 
@@ -57,15 +61,14 @@ module.exports = {
         var words = [],
             word = '';
 
-        var inQuotes = false,
-            inSub = false;
+        var inQuotes = false;
 
         for (var i = 0; i < expression.length; i++) {
             var character = expression[i];
 
             if (!inQuotes) {
                 if (character === ' ') {
-                    pushWord(words, word, inSub);
+                    pushWord(words, word);
                     word = '';
                     continue;
                 }
@@ -73,7 +76,6 @@ module.exports = {
                 if (character === 'o' && expression[i + 1] === 'r') {
                     words = warpUntilLastConjunction(words);
                     words.push(new reserved('or'));
-                    inSub = true;
                     i++;
                     continue;
                 }
@@ -81,7 +83,6 @@ module.exports = {
                 if (character === 'a' && expression[i + 1] === 'n' && expression[i + 2] === 'd') {
                     words = warpUntilLastConjunction(words);
                     words.push(new reserved('and'));
-                    inSub = true;
                     i += 2;
                     continue;
                 }
@@ -95,7 +96,7 @@ module.exports = {
             word = word + character;
         }
 
-        pushWord(words, word, inSub);        
+        pushWord(words, word);        
 
         return normalize(words);
     }
