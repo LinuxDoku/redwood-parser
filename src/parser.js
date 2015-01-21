@@ -9,6 +9,12 @@ module.exports = {
         }
 
         var pushWord = function(words, word) {
+            if(word instanceof reserved) {
+                warpUntilLastConjunction(words);
+                words.push(word);
+                return;
+            }
+
             if (word !== '') {
                 if (words.length > 0) {
                     var prevWord = words[words.length - 1];
@@ -39,11 +45,11 @@ module.exports = {
             }
 
             if(wrappedWords.length !== 0) {
-                words = words.slice(i, i + words.length);
+                var beforeWrappedWords = words.slice(i, i + words.length);
+                words.length = 0;
+                words.push.apply(this, beforeWrappedWords);
                 words.push(wrappedWords);
             }
-
-            return words;
         }
 
         var normalize = function(words) {
@@ -74,15 +80,13 @@ module.exports = {
                 }
 
                 if (character === 'o' && expression[i + 1] === 'r') {
-                    words = warpUntilLastConjunction(words);
-                    words.push(new reserved('or'));
+                    pushWord(words, new reserved('or'));
                     i++;
                     continue;
                 }
 
                 if (character === 'a' && expression[i + 1] === 'n' && expression[i + 2] === 'd') {
-                    words = warpUntilLastConjunction(words);
-                    words.push(new reserved('and'));
+                    pushWord(words, new reserved('and'));
                     i += 2;
                     continue;
                 }
